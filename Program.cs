@@ -288,5 +288,34 @@ app.MapGet("/api/posts/{id}", (int id) =>
     return post != null ? Results.Ok(post) : Results.NotFound();
 });
 
+//POST Comment to POST
+app.MapPost("/posts/{postId}/comments", (int postId, Comments comment) =>
+{
+
+    if (comment == null)
+    {
+        return Results.BadRequest("Comment data is invalid.");
+    }
+
+    comments.Add(comment);
+
+    return Results.Ok("Comment added successfully.");
+});
+
+//DELETE a Comment
+
+app.MapDelete("/comments/{commentId}", (int commentId) =>
+{
+    var commentToDelete = comments.FirstOrDefault(c => c.Id == commentId);
+
+    if (commentToDelete == null)
+    {
+        return Results.NotFound("Comment not found.");
+    }
+
+    comments.Remove(commentToDelete);
+
+    return Results.Ok("Comment deleted successfully.");
+});
 
 app.Run();
