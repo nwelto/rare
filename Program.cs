@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using rare.Models;
+using System.Xml.Linq;
 
 List<Users> users = new List<Users>
 {
@@ -13,7 +14,7 @@ List<Users> users = new List<Users>
         Username = "johndoe",
         Password = "hashed_password1",
         ProfileImageUrl = "http://example.com/images/johndoe.png",
-        CreatedOn = "2024-01-01",
+        CreatedOn = new DateTime(2024,01,01),
         Active = true
     },
     new Users()
@@ -26,7 +27,7 @@ List<Users> users = new List<Users>
         Username = "janesmith",
         Password = "hashed_password2",
         ProfileImageUrl = "http://example.com/images/janesmith.png",
-        CreatedOn = "2024-01-02",
+        CreatedOn = new DateTime(2024,01,02),
         Active = true
     },
     new Users()
@@ -39,12 +40,12 @@ List<Users> users = new List<Users>
         Username = "emilyb",
         Password = "hashed_password3",
         ProfileImageUrl = "http://example.com/images/emilyb.png",
-        CreatedOn = "2024-01-03",
+        CreatedOn = new DateTime(2024,01,03),
         Active = true
     }
 };
 
-List<Post> posts = new List<Post>
+List<Posts> posts = new List<Posts>
 {
     new Posts()
     {
@@ -52,7 +53,7 @@ List<Post> posts = new List<Post>
         UserId = 1,
         CategoryId = 1,
         Title = "The Future of Technology in Literature",
-        PublicationDate = "2024-02-05",
+        PublicationDate = new DateTime(2024,02,05),
         ImageUrl = "http://example.com/images/post1.png",
         Content = "An exploration of how technology influences modern storytelling...",
         Approved = true
@@ -63,7 +64,7 @@ List<Post> posts = new List<Post>
         UserId = 2,
         CategoryId = 2,
         Title = "Rediscovering Classic Novels",
-        PublicationDate = "2024-02-06",
+        PublicationDate = new DateTime(2024,02,06),
         ImageUrl = "http://example.com/images/post2.png",
         Content = "A personal journey through the classics of literature...",
         Approved = true
@@ -74,7 +75,7 @@ List<Post> posts = new List<Post>
         UserId = 3,
         CategoryId = 3,
         Title = "The Art of Travel Writing",
-        PublicationDate = "2024-02-07",
+        PublicationDate = new DateTime(2024,02,07),
         ImageUrl = "http://example.com/images/post3.png",
         Content = "Crafting engaging narratives from travel experiences...",
         Approved = true
@@ -101,7 +102,7 @@ List<Tags> tags = new List<Tags>
     },
     new Tags()
     {
-      Id = 4
+      Id = 4,
 
       Label = "Creativity"
     },
@@ -157,5 +158,93 @@ List<Subscriptions> subscriptions = new List<Subscriptions>
       FollowerId = 3,
       AuthorId = 3,
       CreatedOn =  new DateTime(2024, 02, 06)
+    }
+};
+
+List<PostReactions> postReactions = new List<PostReactions>
+{
+    new PostReactions()
+    {
+        Id = 1,
+        ReactionId = 1,
+        UserId = 2,
+        PostId = 1
+    },
+    new PostReactions()
+    {
+        Id = 2,
+        ReactionId = 2,
+        UserId = 1,
+        PostId = 2
+    },
+    new PostReactions()
+    {
+        Id = 3,
+        ReactionId = 3,
+        UserId = 3,
+        PostId = 3
+    }
+};
+
+List<Comments> comments = new List<Comments>
+{
+    new Comments()
+    {
+        Id = 1,
+        AuthorId = 1,
+        PostId = 1,
+        Content = "Really enjoyed this article! It gave me a lot to think about."
+    },
+    new Comments()
+    {
+        Id = 2,
+        AuthorId = 2,
+        PostId = 2,
+        Content = "Wonderful insights on classic literature. Thanks for sharing!"
+    },
+    new Comments()
+    {
+        Id = 3,
+        AuthorId = 3,
+        PostId = 3,
+        Content = "Your writing transported me to the places you described. Beautiful!"
+    }
+};
+
+List<Categories> categories = new List<Categories>
+{
+    new Categories()
+    {
+        Id = 1,
+        Label = "Technology"
+    },
+    new Categories()
+    {
+        Id = 2,
+        Label = "Classics"
+    },
+    new Categories()
+    {
+        Id = 3,
+        Label = "Travel"
+    }
+};
+
+List<Reactions> reactions = new List<Reactions>
+{
+    new Reactions()
+    {
+        Id = 1,
+        Emoji = ":+1:"
+    },
+    new Reactions()
+    {
+        Id = 2,
+        Emoji = ":heart:"
+    },
+    new Reactions()
+    {
+        Id = 3,
+        Emoji = ":joy:"
     }
 };

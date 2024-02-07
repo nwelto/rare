@@ -11,8 +11,8 @@ namespace rare.Models
         public string Bio { get; set; }
         public string Username { get; set; }
         public string Password  { get; set; }
-        public string ProfileImgUrl { get; set; }
+        public string ProfileImageUrl { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string Active { get; set; }
+        public bool Active { get; set; }
     }
 }
