@@ -332,8 +332,10 @@ app.MapDelete("/comments/{commentId}", (int commentId) =>
 // GET ALL TAGS
 app.MapGet("/tags", () =>
 {
-    return tags;
+    var sortedTags = tags.OrderBy(tag => tag.Label).ToList();
+    return sortedTags;
 });
+
 
 // CREATE/POST TAGS
 app.MapPost("/tags", (Tags tag) =>
@@ -422,10 +424,91 @@ app.MapPost("/categories", (Categories category) =>
     {
         return Results.BadRequest("Category data is invalid.");
     }
-
     categories.Add(category);
-
     return Results.Ok("Category created successfully.");
+});
+
+// GET TAGS ASSOCIATED WITH POSTS
+app.MapGet("/posts/{id}/tags", (int id) =>
+{
+     Posts post = posts.FirstOrDefault(p => p.Id == id);
+
+    if (post == null)
+    {
+        return Results.NotFound("Post not found!");
+    }
+
+    List<int> tagIds = PostTagList
+    .Where(pt => pt.PostId == id)
+    .Select(pt => pt.TagId)
+    .ToList();
+    List<Tags> associatedTags = tags
+    .Where(t => tagIds.Contains(t.Id)).ToList();
+
+    return Results.Ok(associatedTags);
+});
+
+// GET POSTS BASED ON TAGS
+app.MapGet("/tags/{id}/posts", (int id) =>
+{
+    Tags tag = tags.FirstOrDefault(t => t.Id == id);
+
+    if (tag == null)
+    {
+        return Results.NotFound("Tag not found!");
+    }
+
+    var postIds = PostTagList
+    .Where(pt => pt.TagId == id)
+    .Select(pt => pt.PostId);
+    var assignedPosts = posts
+    .Where(p => postIds.Contains(p.Id))
+    .ToList();
+    foreach (var post in assignedPosts)
+    {
+        var tagIds = PostTagList
+        .Where(pt => pt.PostId == post.Id)
+        .Select(pt => pt.TagId);
+        var postTags = tags
+        .Where(t => tagIds.Contains(t.Id)).ToList();
+
+        post.PostTags = postTags.Select(t => new PostTags { Id = t.Id, PostId = post.Id, TagId = t.Id }).ToList();
+    }
+
+    return Results.Ok(assignedPosts);
+});
+
+// EDIT TAGS ON POSTS
+app.MapPut("/posts/{postId}/tags", (int postId, List<int> tagIds) =>
+{
+    Posts postToUpdate = posts.FirstOrDefault(p => p.Id == postId);
+    if (postToUpdate == null)
+    {
+        return Results.NotFound("Post not found.");
+    }
+
+    PostTagList.RemoveAll(pt => pt.PostId == postId);
+    PostTagList.AddRange(tagIds.Select(tagId => new PostTags
+    {
+        Id = PostTagList.Count + 1,
+        PostId = postId,
+        TagId = tagId
+    }));
+
+    return Results.Ok("Tags updated successfully!");
+});
+
+// ADD TAGS TO NEW POST
+app.MapPost("/posts/{postId}/tags", (int postId, int tagId) =>
+{
+    PostTags postTag = new PostTags
+    {
+        Id = PostTagList.Max(postTag => postTag.Id) + 1,
+        PostId = postId,
+        TagId = tagId,
+    };
+    PostTagList.Add(postTag);
+    return Results.Ok(postTag);
 });
 
 app.Run();
