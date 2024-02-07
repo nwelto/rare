@@ -398,4 +398,34 @@ app.MapGet("/subscribed-posts/{followerId}", (int followerId) =>
     return Results.Ok(subscribedPosts);
 });
 
+//Get Categories
+
+app.MapGet("/categories", () =>
+{
+    return Results.Ok(categories);
+});
+
+//Get Posts by Category
+
+app.MapGet("/posts", (int categoryId) =>
+{
+    var filteredPosts = posts.Where(p => p.CategoryId == categoryId).ToList();
+
+    return Results.Ok(filteredPosts);
+});
+
+//Post a Category
+
+app.MapPost("/categories", (Categories category) =>
+{
+    if (category == null)
+    {
+        return Results.BadRequest("Category data is invalid.");
+    }
+
+    categories.Add(category);
+
+    return Results.Ok("Category created successfully.");
+});
+
 app.Run();
