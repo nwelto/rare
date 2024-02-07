@@ -288,6 +288,17 @@ app.MapGet("/api/posts/{id}", (int id) =>
     return post != null ? Results.Ok(post) : Results.NotFound();
 });
 
+//DELETE POST
+app.MapDelete("/api/posts/{id}", (int id) =>
+{
+    var post = posts.FirstOrDefault(p => p.Id == id);
+    if (post == null) return Results.NotFound();
+
+    posts.Remove(post);
+    return Results.Ok(new { message = "Post deleted successfully." });
+});
+
+
 //POST Comment to POST
 app.MapPost("/posts/{postId}/comments", (int postId, Comments comment) =>
 {
