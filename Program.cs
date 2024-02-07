@@ -373,6 +373,61 @@ app.MapDelete("/tags/{id}", (int id) =>
     return Results.Ok(tag);
 });
 
+//Get Post Comments
+
+app.MapGet("/posts/{postId}/comments/{commentId}", (int postId, int commentId) =>
+{
+    var comment = comments.FirstOrDefault(c => c.Id == commentId && c.PostId == postId);
+
+    if (comment == null)
+    {
+        return Results.NotFound("Comment not found.");
+    }
+    return Results.Ok(comment);
+});
+
+//Get Subscribed Posts
+
+app.MapGet("/subscribed-posts/{followerId}", (int followerId) =>
+{
+    var subscribedPosts = (from sub in subscriptions
+                           join post in posts on sub.AuthorId equals post.UserId
+                           where sub.FollowerId == followerId
+                           select post).ToList();
+
+    return Results.Ok(subscribedPosts);
+});
+
+//Get Categories
+
+app.MapGet("/categories", () =>
+{
+    return Results.Ok(categories);
+});
+
+//Get Posts by Category
+
+app.MapGet("/posts", (int categoryId) =>
+{
+    var filteredPosts = posts.Where(p => p.CategoryId == categoryId).ToList();
+
+    return Results.Ok(filteredPosts);
+});
+
+//Post a Category
+
+app.MapPost("/categories", (Categories category) =>
+{
+    if (category == null)
+    {
+        return Results.BadRequest("Category data is invalid.");
+    }
+
+    categories.Add(category);
+
+    return Results.Ok("Category created successfully.");
+});
+
 
 // GET SUBSCRIPTIONS BY USER
 app.MapGet("/subscription/{id}", (int id) => {
