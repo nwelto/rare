@@ -376,7 +376,7 @@ app.MapDelete("/tags/{id}", (int id) =>
 
 // GET SUBSCRIPTIONS BY USER
 app.MapGet("/subscription/{id}", (int id) => {
-    Subscriptions subs = subscriptions.Where(u => u.FollowerId == id).ToList();
+    var subs = subscriptions.Where(u => u.FollowerId == id).ToList();
     if (subs == null)
     {
         return Results.NotFound();
