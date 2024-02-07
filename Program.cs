@@ -250,27 +250,32 @@ List<Reactions> reactions = new List<Reactions>
 };
 
 var builder = WebApplication.CreateBuilder(args);
-
-
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
-
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.MapGet("/api/posts", () => Results.Ok(posts));
-
-app.MapGet("/api/posts/{id}", (int id) =>
+// GET - ALL USERS
+app.MapGet("/users", () => 
 {
-    var post = posts.FirstOrDefault(p => p.Id == id);
-    return post != null ? Results.Ok(post) : Results.NotFound();
+    return users;
+});
+
+// GET USER BY ID - OBTAINING USER DETAILS
+app.MapGet("/users/{id}", (int id) => {
+    Users user = users.FirstOrDefault(u => u.Id == id);
+    if (user == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(user);
 });
 
 
