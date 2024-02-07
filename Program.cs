@@ -248,3 +248,35 @@ List<Reactions> reactions = new List<Reactions>
         Emoji = ":joy:"
     }
 };
+
+var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+var app = builder.Build();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// GET - ALL USERS
+app.MapGet("/users", () => 
+{
+    return users;
+});
+
+// GET USER BY ID - OBTAINING USER DETAILS
+app.MapGet("/users/{id}", (int id) => {
+    Users user = users.FirstOrDefault(u => u.Id == id);
+    if (user == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(user);
+});
+
+
+app.Run();
