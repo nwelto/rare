@@ -376,12 +376,22 @@ app.MapDelete("/tags/{id}", (int id) =>
 // POST - ASSOCIATE SUBSCRIPTION 
 app.MapPost("/subscription", (Subscriptions subscription) =>
 {
-    // creates a new id (When we get to it later, our SQL database will do this for us like JSON Server did!)
     subscription.Id = subscriptions.Max(st => st.Id) + 1;
     subscriptions.Add(subscription);
     return subscription;
 });
 
 // DELETE - DISASSOCIATE SUBSCRIPTION
+app.MapDelete("/subscription/{id}", (int id) =>
+{
+    Subscriptions subscriptionToDelete = subscriptions.FirstOrDefault(sub => sub.Id == id);
+    if (subscriptionToDelete == null)
+    {
+        return Results.NotFound();
+    };
+    subscriptions.Remove(subscriptionToDelete);
+    return Results.Ok();
+});
+
 
 app.Run();
