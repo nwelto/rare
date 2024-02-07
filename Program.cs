@@ -373,10 +373,23 @@ app.MapDelete("/tags/{id}", (int id) =>
     return Results.Ok(tag);
 });
 
+
+// GET SUBSCRIPTIONS BY USER
+app.MapGet("/subscription/{id}", (int id) => {
+    Subscriptions subs = subscriptions.Where(u => u.FollowerId == id).ToList();
+    if (subs == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(subs);
+});
+
+
 // POST - ASSOCIATE SUBSCRIPTION 
 app.MapPost("/subscription", (Subscriptions subscription) =>
 {
     subscription.Id = subscriptions.Max(st => st.Id) + 1;
+    subscription.CreatedOn = DateTime.Now;
     subscriptions.Add(subscription);
     return subscription;
 });
