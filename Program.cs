@@ -278,5 +278,15 @@ app.MapGet("/users/{id}", (int id) => {
     return Results.Ok(user);
 });
 
+// GET POST
+app.MapGet("/api/posts", () => Results.Ok(posts));
+
+//GET POST BY ID
+app.MapGet("/api/posts/{id}", (int id) =>
+{
+    var post = posts.FirstOrDefault(p => p.Id == id);
+    return post != null ? Results.Ok(post) : Results.NotFound();
+});
+
 
 app.Run();
