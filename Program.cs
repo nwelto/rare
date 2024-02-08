@@ -583,5 +583,40 @@ app.MapDelete("/subscription/{id}", (int id) =>
     return Results.Ok();
 });
 
+// REACTIONS - GET REACTIONS
+
+app.MapGet("/reactions", () =>
+{
+    return Results.Ok(reactions);
+});
+
+//REACTIONS - GET REACTIONS BY ID
+
+app.MapGet("/reactions/{reactionId}", (int reactionId) =>
+{
+    var reaction = reactions.FirstOrDefault(r => r.Id == reactionId);
+
+    if (reaction == null)
+    {
+        return Results.NotFound("Reaction not found.");
+    }
+    return Results.Ok(reaction);
+});
+
+//GET POSTREACTIONS
+
+app.MapGet("/postreactions", () =>
+{
+    return Results.Ok(postReactions);
+});
+
+//GET REACTIONS by POST
+
+app.MapGet("/posts/{postId}/reactions", (int postId) =>
+{
+    var ReactionsForPost = postReactions.Where(pr => pr.PostId == postId).ToList();
+
+    return Results.Ok(ReactionsForPost);
+});
 
 app.Run();
