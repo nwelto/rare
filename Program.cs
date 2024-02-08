@@ -279,18 +279,18 @@ app.MapGet("/users/{id}", (int id) => {
 });
 
 // GET POST
-app.MapGet("/api/posts", () => Results.Ok(posts));
+app.MapGet("/posts/all", () => Results.Ok(posts));
 
 //CREATE POST
-app.MapPost("/api/posts", (Posts post) =>
+app.MapPost("/posts", (Posts post) =>
 {
     post.Id = posts.Max(p => p.Id) + 1;
     posts.Add(post);
-    return Results.Created($"/api/posts/{post.Id}", post);
+    return Results.Created($"/posts/{post.Id}", post);
 });
 
 //UPDATE POST
-app.MapPut("/api/posts/{id}", (int id, Posts updatedPost) =>
+app.MapPut("/posts/{id}", (int id, Posts updatedPost) =>
 {
     var post = posts.FirstOrDefault(p => p.Id == id);
     if (post == null)
@@ -310,14 +310,14 @@ app.MapPut("/api/posts/{id}", (int id, Posts updatedPost) =>
 
 
 //GET POST BY ID
-app.MapGet("/api/posts/{id}", (int id) =>
+app.MapGet("/posts/{id}", (int id) =>
 {
     var post = posts.FirstOrDefault(p => p.Id == id);
     return post != null ? Results.Ok(post) : Results.NotFound();
 });
 
 //GET POST BY USER
-app.MapGet("/api/posts/user/{userId}", (int userId) =>
+app.MapGet("/posts/user/{userId}", (int userId) =>
 {
     var userPosts = posts.Where(p => p.UserId == userId).ToList();
     if (userPosts == null || !userPosts.Any())
@@ -328,7 +328,7 @@ app.MapGet("/api/posts/user/{userId}", (int userId) =>
 });
 
 //DELETE POST
-app.MapDelete("/api/posts/{id}", (int id) =>
+app.MapDelete("posts/{id}", (int id) =>
 {
     var post = posts.FirstOrDefault(p => p.Id == id);
     if (post == null) return Results.NotFound();
