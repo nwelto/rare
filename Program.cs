@@ -281,11 +281,50 @@ app.MapGet("/users/{id}", (int id) => {
 // GET POST
 app.MapGet("/api/posts", () => Results.Ok(posts));
 
+//CREATE POST
+app.MapPost("/api/posts", (Posts post) =>
+{
+    post.Id = posts.Max(p => p.Id) + 1;
+    posts.Add(post);
+    return Results.Created($"/api/posts/{post.Id}", post);
+});
+
+//UPDATE POST
+app.MapPut("/api/posts/{id}", (int id, Posts updatedPost) =>
+{
+    var post = posts.FirstOrDefault(p => p.Id == id);
+    if (post == null)
+    {
+        return Results.NotFound($"Post with ID {id} not found.");
+    }
+
+    post.Title = updatedPost.Title;
+    post.Content = updatedPost.Content;
+    post.ImageUrl = updatedPost.ImageUrl;
+    post.CategoryId = updatedPost.CategoryId;
+    post.Approved = updatedPost.Approved;
+    post.PublicationDate = updatedPost.PublicationDate;
+
+    return Results.Ok(post);
+});
+
+
 //GET POST BY ID
 app.MapGet("/api/posts/{id}", (int id) =>
 {
     var post = posts.FirstOrDefault(p => p.Id == id);
     return post != null ? Results.Ok(post) : Results.NotFound();
+});
+
+//GET POST BY USER
+app.MapGet("/api/posts/user/{userId}", (int userId) =>
+{
+    var userPosts = posts.Where(p => p.UserId == userId).ToList();
+    if (userPosts == null || !userPosts.Any())
+    {
+        return Results.NotFound($"No posts found for user with ID {userId}.");
+    }
+    return Results.Ok(userPosts);
 });
 
 //DELETE POST
