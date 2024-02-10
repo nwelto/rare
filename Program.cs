@@ -619,4 +619,25 @@ app.MapGet("/posts/{postId}/reactions", (int postId) =>
     return Results.Ok(ReactionsForPost);
 });
 
+// CREATE POST REACTIONS
+app.MapPost("/posts/reactions/create", (PostReactions postReaction) =>
+{
+    postReaction.Id = postReactions.Max(pr => pr.Id) + 1;
+    postReactions.Add(postReaction);
+    return postReaction;
+});
+
+// DELETE POST REACTIONS
+app.MapDelete("/posts/{postId}/reactions/{reactionId}", (int postId, int reactionId) =>
+{
+    var reactionToDelete = postReactions.FirstOrDefault(pr => pr.PostId == postId && pr.Id == reactionId);
+    if (reactionToDelete == null)
+    {
+        return Results.NotFound("Reaction not found!");
+    }
+
+    postReactions.Remove(reactionToDelete);
+    return Results.Ok("Reaction deleted!");
+});
+
 app.Run();
