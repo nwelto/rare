@@ -478,6 +478,18 @@ app.MapPost("/categories", (Categories category) =>
     return Results.Ok("Category created successfully.");
 });
 
+// DELETE CATEGORY
+app.MapDelete("/categories/{id}", (int id) =>
+{
+    var categoryToDelete = categories.FirstOrDefault(c => c.Id == id);
+    if (categoryToDelete == null)
+    {
+        return Results.NotFound();
+    };
+    categories.Remove(categoryToDelete);
+    return Results.Ok();
+});
+
 // GET TAGS ASSOCIATED WITH POSTS
 app.MapGet("/posts/{id}/tags", (int id) =>
 {
